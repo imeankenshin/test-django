@@ -1,7 +1,9 @@
-from django.shortcuts import render, HttpResponse
+from django.http import HttpResponse
+from django.shortcuts import render
 
-# Create your views here.
 def index(request):
-  return HttpResponse("Hello, world.")
-def login_page(request):
-  return HttpResponse("Login")
+    return HttpResponse("Hello, world.")
+def detail(request):
+    return HttpResponse("detail page")
+def index(request):
+    return render(request, "blog/index.html")
