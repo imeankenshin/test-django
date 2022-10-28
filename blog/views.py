@@ -2,7 +2,15 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
 
+class AccountLoginView(LoginView):
+    """ログインページのテンプレート"""
+    template_name = 'blog/login.html'
+
+    def get_default_redirect_url(self):
+        """ログインに成功した時に飛ばされるURL"""
+        return "/blog"
 class AccountCreateView(View):
     def get(self, request):
         return render(request, "blog/register.html")
