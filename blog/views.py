@@ -1,8 +1,10 @@
+import django
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
 
 class AccountLoginView(LoginView):
     """ログインページのテンプレート"""
@@ -24,9 +26,18 @@ class AccountCreateView(View):
         )
         # 登録完了画面を表示する
         return render(request, "blog/register_success.html")
-def index(request):
+def index():
     return HttpResponse("Hello, world.")
-def detail(request):
+def detail():
     return HttpResponse("detail page")
 def index(request):
     return render(request, "blog/index.html")
+
+class MypageView(LoginRequiredMixin, View):
+    login_url= "blog/login.html"
+    
+    def get(self, request):
+        return render(request, "blog/mypage.html")
+    
+class AccountLogoutView(LogoutView):
+    template_name = 'blog/logout.html'
