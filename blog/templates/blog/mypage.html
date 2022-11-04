@@ -1,4 +1,11 @@
 <main>
   <h2>Welcome to your page!</h2>
   <a href="mypage/new-article">New blog</a>
+  {% for article in articles %}
+  <div>
+    <h2>{{ article.title }}</h2>
+    <p>{{ article.body }}</p>
+  </div>
+
+  {% endfor %}
 </main>

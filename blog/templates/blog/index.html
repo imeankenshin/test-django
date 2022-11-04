@@ -1,6 +1,38 @@
+<head>
+  <title>{{user.username}}のブログ</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+
 <h1>{{user.username}}のブログへようこそ</h1>
-<div>
+<main>
   {% if user.is_authenticated %} {{ user.username }} さん
   <a href="mypage">ブログ編集</a>
   {% else %} ログインしていません {% endif %}
-</div>
+
+  <h2>あなたのブログ一覧</h2>
+  <div class="blog-contain">
+    {% for article in articles %}
+    <div class="blog-card">
+      <h3><a href="articles/${article.id}">{{article.title}}</a></h3>
+      <p>{{article.body}}</p>
+    </div>
+    {% endfor %}
+  </div>
+</main>
+
+<style>
+  .blog-contain {
+    display: flex;
+    align-items: center;
+  }
+  .blog-card {
+    padding: 1.5rem;
+    margin: 0.5rem;
+    border: 2px solid #aaa;
+    border-radius: 1rem;
+  }
+  .blog-card > h3 {
+    margin: 0.25rem;
+    font-size: 2rem;
+  }
+</style>
