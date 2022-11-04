@@ -28,12 +28,20 @@ class AccountCreateView(View):
         )
         # 登録完了画面を表示する
         return render(request, "blog/register_success.html")
-def index():
-    return HttpResponse("Hello, world.")
+
 def detail():
     return HttpResponse("detail page")
+
 def index(request):
-    return render(request, "blog/index.html")
+    # Article の model を使ってすべての記事を取得する
+    # Article.objects.all() は article のリストが返ってくる
+    articles = Article.objects.all()
+
+    # こうすることで、article 変数をテンプレートにわたす事ができる
+    # {テンプレート上での変数名: 渡す変数}
+    return render(request, "blog/index.html", {
+        "articles": articles
+    })
 
 class MypageView(LoginRequiredMixin, View):
     login_url= "blog/login.html"
@@ -71,4 +79,11 @@ class ArticleListView(View):
         # こうすると、テンプレートの中で articles という変数が渡せる
         return render(request, "blog/articles.html", {
             "articles": articles
+        })
+
+class ArticleView(View):
+    def get(self, request, id):
+        article = Article.objects.get(id=id)
+        return render(request,"blog/article.html", {
+            "article":article
         })
