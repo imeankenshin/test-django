@@ -1,0 +1,14 @@
+<head>
+  <title>記事一覧</title>
+</head>
+
+<body>
+  <h1>記事一覧</h1>
+  {% for article in articles %}
+  <div>
+    <h2>{{ article.title }}</h2>
+    <p>{{ article.body }}</p>
+  </div>
+
+  {% endfor %}
+</body>

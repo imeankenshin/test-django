@@ -1,9 +1,6 @@
-<h1>Hello, world.</h1>
+<h1>{{user.username}}のブログへようこそ</h1>
 <div>
-  {% if user.is_authenticated %} {{ user.username }} さん {% else %}
-  ログインしていません {% endif %}
-</div>
-
-<div>
-  <a href="/blog/detail">detail</a>
+  {% if user.is_authenticated %} {{ user.username }} さん
+  <a href="mypage">ブログ編集</a>
+  {% else %} ログインしていません {% endif %}
 </div>
