@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from blog.models import Article
+from blog.quitta import QuittaAPI
 
 class AccountLoginView(LoginView):
     """ログインページのテンプレート"""
@@ -37,6 +38,10 @@ def index(request):
     # Article.objects.all() は article のリストが返ってくる
     articles = Article.objects.all()
 
+    #QuittaのAPIを読み込む
+    quitta = QuittaAPI()
+    quitta.get_django_artic()
+    
     # こうすることで、article 変数をテンプレートにわたす事ができる
     # {テンプレート上での変数名: 渡す変数}
     return render(request, "blog/index.html", {
@@ -47,7 +52,10 @@ class MypageView(LoginRequiredMixin, View):
     login_url= "blog/login.html"
     
     def get(self, request):
-        return render(request, "blog/mypage.html")
+        articles = Article.objects.filter(user=request.user)
+        return render(request, "blog/mypage.html", {
+            "articles": articles
+        })
     
 class AccountLogoutView(LogoutView):
     template_name = 'blog/logout.html'
