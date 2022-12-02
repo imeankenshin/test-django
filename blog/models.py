@@ -10,3 +10,7 @@ class Article(models.Model):
   body = models.TextField()
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   
+class Comment(models.Model):
+  body = models.TextField()
+  article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments")
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
