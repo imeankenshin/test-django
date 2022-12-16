@@ -14,5 +14,6 @@ urlpatterns = [
     path("articles", views.ArticleListView.as_view(), name="articles"),
     path("articles/<id>", views.ArticleView.as_view(), name="article"),
     path("api/articles", views.ArticleApiView.as_view(), name="api"),
-        path("api/articles/<article_id>/comments", views.CommentApiClient.as_view(), name="api-articles-comments"),
+    path("api/articles/<article_id>", views.ArticleDetailView.as_view(), name="apu-articles-detail"),
+    path("api/articles/<article_id>/comments", views.CommentApiClient.as_view(), name="api-articles-comments"),
 ]

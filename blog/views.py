@@ -1,5 +1,3 @@
-import imp
-import django
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
@@ -9,6 +7,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from blog.models import Article, Comment
 from blog.quitta import QiitaApiClient
 from django.http import JsonResponse
+from basicauth.decorators import basic_auth_required
+from django.http import HttpRequest
 import json
 
 class AccountLoginView(LoginView):
@@ -31,6 +31,10 @@ class AccountCreateView(View):
         )
         # 登録完了画面を表示する
         return render(request, "blog/register_success.html")
+
+@basic_auth_required
+def index(req: HttpRequest):
+    print(req)
 
 def detail():
     return HttpResponse("detail page")
@@ -69,10 +73,10 @@ class MypageView(LoginRequiredMixin, View):
         return render(request, "blog/mypage.html", {
             "articles": articles
         })
-    
+
 class AccountLogoutView(LogoutView):
     template_name = 'blog/logout.html'
-    
+
 class ArticleCreateView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "blog/article_new.html")
@@ -108,7 +112,7 @@ class ArticleView(View):
         return render(request,"blog/article.html", {
             "article":article
         })
-        
+
 class ArticleApiView(View):
     def get(self, req):
         #DBからArticleを取得
@@ -156,4 +160,36 @@ class CommentApiClient(View):
 
         return JsonResponse({
             "message": "コメントの投稿に成功しました"
+        })
+
+class ArticleDetailView(View):
+    def get(self, request, article_id):
+        article = Article.objects.get(id=article_id)
+        dict_comments = []
+        # Comment クラスの方の related_name をつけると、その名前を使って、
+        # Article クラスからコメント一覧が取得できるようになります
+        # （ややこしいので気をつけてください）
+        # コメント一覧を取得して、dict 形式に変換していきます
+        for comment in article.comments.all():
+            # dict 形式に変換
+            dict_comment = {
+                "id": comment.id,
+                "body": comment.body,
+                "user": {
+                    "id": comment.user.id,
+                    "username": comment.user.username,
+                }
+            }
+            dict_comments.append(dict_comment) 
+        return JsonResponse({
+            "article": {
+                "id": article.id,
+                "title": article.title,
+                "user": {
+                    "id": article.user.id,
+                    "username": article.user.username,
+                },
+                # comments の部分にはさっき作成した dict のリストを入れます
+                "comments": dict_comments,
+            }
         })
