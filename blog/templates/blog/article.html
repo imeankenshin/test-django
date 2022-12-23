@@ -6,7 +6,9 @@
     <div class="blog-shower">
       <p>投稿者: {{article.user.username}}</p>
       <h1>{{article.title}}</h1>
+      {% autoescape off %}
       <p>{{article.body}}</p>
+      {% endautoescape %}
     </div>
   </main>
 </body>

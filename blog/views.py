@@ -11,6 +11,10 @@ from basicauth.decorators import basic_auth_required
 from django.http import HttpRequest
 import json
 
+@basic_auth_required
+def index(req: HttpRequest):
+    print(req)
+
 class AccountLoginView(LoginView):
     """ログインページのテンプレート"""
     template_name = 'blog/login.html'
@@ -32,9 +36,6 @@ class AccountCreateView(View):
         # 登録完了画面を表示する
         return render(request, "blog/register_success.html")
 
-@basic_auth_required
-def index(req: HttpRequest):
-    print(req)
 
 def detail():
     return HttpResponse("detail page")
@@ -108,7 +109,9 @@ class ArticleListView(View):
 
 class ArticleView(View):
     def get(self, request, id):
-        article = Article.objects.get(id=id)
+        article = Article.objects.raw(
+            "SELECT * FROM blog_article where id = %d",[id]
+        )
         return render(request,"blog/article.html", {
             "article":article
         })
@@ -193,3 +196,12 @@ class ArticleDetailView(View):
                 "comments": dict_comments,
             }
         })
+
+def open_article_file(request):
+    article_filename = request.GET["filename"]
+    article_file = open(article_filename)
+    text = article_file.read()
+    return render(request, "blog/article_file.html", {
+        "title": article_filename,
+        "body": text,
+    })

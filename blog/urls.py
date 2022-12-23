@@ -16,4 +16,5 @@ urlpatterns = [
     path("api/articles", views.ArticleApiView.as_view(), name="api"),
     path("api/articles/<article_id>", views.ArticleDetailView.as_view(), name="apu-articles-detail"),
     path("api/articles/<article_id>/comments", views.CommentApiClient.as_view(), name="api-articles-comments"),
+    path("article-file", views.open_article_file, name="article-file")
 ]
